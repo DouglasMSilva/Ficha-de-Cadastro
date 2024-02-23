@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha2/dist/css/bootstrap.min.css">
+    <title>Formulário de Cadastro</title>
+
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .col-3 {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cols {
+            display: flex;
+            flex-direction: row;
+            gap: 1px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+
+
+
+<body>
+    <div class="container p-5" id="form">
+        <div class="row mb-3 g-2">
+            <h1>Seu Cadastro</h1>
+            <h6>Os campos com "*" são de preenchimento obrigatório</h6>
+            <div class="col-12">
+                <label class="form-label">Nome: *</label>
+                <input type="text" class="form-control" id="inputs" oninput="nameValidate()" required>
+                <span id="span_req"></span>
+            </div>
+
+            <div class="col-3">
+                <label class="form-label">Telefone: *</label>
+                <div class="cols">
+                    <div class="col-2">
+                        <input type="text" id="inputs" pattern="[0-9]*" inputmode="numeric" maxlength="2" class="ddd form-control" oninput="dddValidate()" required>
+                        <span id="span_req"></span>
+                    </div>
+                    <div class="col-10">
+                        <input type="text" id="inputs" pattern="[0-9]*" inputmode="numeric" maxlength="9" class=" tel form-control" oninput="telValidate()" required>
+                        <span id="span_req"></span>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="col-7">
+                <label class="form-label">Logradouro: </label>
+                <input type="text" class="form-control">
+            </div>
+
+            <div class="col-2">
+                <label class="form-label">Número: </label>
+                <input type="text" id="num" pattern="[0-9]*" inputmode="numeric" class="form-control">
+            </div>
+
+            <div class="col-6">
+                <label id="senha" class="form-label">Senha: *</label>
+                <input type="password" class="form-control" id="inputs" oninput="validatePassword()" required>
+                <span id="span_req"></span>
+            </div>
+
+            <div class="col-6">
+                <label id="repetir_senha" class="form-label">Repita sua Senha: *</label>
+                <input type="password" class="form-control" id="inputs" oninput="comparePassword()" required>
+                <span id="span_req"></span>
+            </div>
+
+            <div class="col">
+                <label class="form-label">Sexo:</label>
+                <br>
+                <label class="form-label"></label>
+                <input type="radio" name="opcao" value="m" oninput="genderValidate()">Masculino
+                <input type="radio" name="opcao" value="f" oninput="genderValidate()">Feminino
+                <span id="span_req"></span>
+            </div>
+
+            <div class="col">
+                <label class="form-label">Informe a sua nacionalidade:</label>
+                <br>
+                <input type="radio" name="nacao" value="Brasileiro" id="brasil" oninput="nacValidate()">Brasileiro
+                <input type="radio" name="nacao" value="Estrangeiro" id="outro" oninput="nacValidate()">Estrangeiro   
+            </div>
+
+            <p id="mensagem"></p>
+            
+            <div id="campo" class="hidden">
+                <label id="texto" class="form-label"></label>
+                <input type="text" pattern="[0-9]*" inputmode="numeric" maxlength="11" id="inputs" class="campoNac form-control" oninput="cpfValidate()" required>
+                <span id="span_req"></span>
+            </div> 
+            
+            <div id="campo2" class="hidden">
+                <label id="texto2" class="form-label"></label>
+                <input type="email" id="inputs" class="campoNac2 form-control" oninput="emailValidate()" required>
+                <span id="span_req"></span>
+            </div> 
+            
+           
+            <button class="btn btn-primary" type="submit">Enviar</button>
+
+
+        </div>
+    </div>
+
+
+    <script>
+
+        const form = document.getElementById('form');
+        let campos = document.querySelectorAll("#inputs");
+        let spans = document.querySelectorAll("#span_req");
+
+
+        document.querySelector(".ddd").addEventListener("input", function(){
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        document.querySelector(".tel").addEventListener("input", function(){
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        document.querySelector("#num").addEventListener("input", function(){
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        
+        function genderValidate() {
+            document.querySelectorAll('input[type="radio"]').forEach(function(radio){
+            let genero = document.querySelector('input[name="opcao"]:checked');
+            if(genero.value === "m") {
+                spans[5].innerHTML = "Homem";
+                spans[5].style.color = "green";
+            }
+            else if(genero.value === "f") {
+                spans[5].innerHTML = "Mulher";
+                spans[5].style.color = "green";
+            }
+        });
+        }
+
+
+        
+        document.querySelector(".campoNac").addEventListener("input", function(){
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+        
+        
+
+
+        function nacValidate() {
+                //Adiciona um evento de clique a cada radio button.
+                document.querySelectorAll('input[type="radio"]').forEach(function(radio) {
+                    let nacionalidade = document.querySelector('input[name="nacao"]:checked');
+                    //Exibe mensagem de texto correspondente à opção selecionada.
+                    if (nacionalidade) {
+                        let mensagem = "Você selecionou: " +nacionalidade.value;
+                        document.getElementById('mensagem').textContent = mensagem;
+                        if (nacionalidade.value == 'Brasileiro') {
+                            let texto = "CPF.: *";
+                            document.getElementById('texto').textContent = texto;
+                            let campo = document.getElementById('campo');
+                            campo.classList.remove('hidden');
+                            let campo2 = document.getElementById('campo2');
+                            campo2.classList.add('hidden');  
+                        }
+                        else if (nacionalidade.value == 'Estrangeiro') {
+                            let texto2 = "E-mail: *";
+                            document.getElementById('texto2').textContent = texto2;
+                            let campo2 = document.getElementById('campo2');
+                            campo2.classList.remove('hidden');
+                            let campo = document.getElementById('campo');
+                            campo.classList.add('hidden');   
+                        }
+                    }
+                });
+        }
+
+
+        function setError(x) {
+            campos[x].style.borderColor = "red";
+            spans[x].style.color = "red";
+        }
+
+        function noError(x) {
+            campos[x].style.borderColor = "green";
+            spans[x].innerHTML = "";
+        }
+        
+        function nameValidate() {
+            if(campos[0].value.length < 3) {
+                setError(0);
+                spans[0].innerHTML = "Nome deve ter no mínimo 3 caracteres!";
+            }
+            else { 
+                noError(0);
+            }
+        }
+
+        function validatePassword() {
+            if(campos[3].value.length < 8) {
+                setError(3);
+                spans[3].innerHTML = "Senha deve ter no mínimo 8 caracteres!";
+            }
+            else {
+                noError(3);
+            }
+        }
+
+        function comparePassword() {
+            if(campos[3].value === campos[4].value && campos[4].value.length >= 8) {
+                noError(4);
+            }
+            else {
+                setError(4);
+                spans[4].innerHTML = "As senhas não são iguais!";
+            }
+        }
+
+        function dddValidate() {
+            if(campos[1].value.length < 2) {
+                setError(1);
+                spans[1].innerHTML = "Necessários 2 dígitos!";
+                spans[1].style.fontSize = "9px";
+            } 
+            else if(campos[1].value.length >= 2) {
+                noError(1);
+            }
+        }
+
+
+        function telValidate() {
+            if(campos[2].value.length < 9) {
+                setError(2);
+                spans[2].innerHTML = "Necessários 9 dígitos!";
+            }
+            else if(campos[2].value.length >= 9) {
+                noError(2);
+            }
+        }
+    
+        function emailValidate() {
+            if(campos[6].value === "") {
+                setError(6);
+                spans[7].innerHTML = "Favor informar um e-mail válido!";
+                spans[7].style.color = "red";
+            }
+            else {
+                noError(6);
+            }
+        }
+
+        function cpfValidate() {
+            if(campos[5].value.length >= 11) {
+                noError(5);
+                spans[6].innerHTML = "";
+
+            }
+            else{
+                setError(5);
+                spans[6].innerHTML = "CPF deve ter 11 números!";
+                spans[6].style.color = "red";
+            }
+        }
+
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/pwacompat@2.0.8/pwacompat.min.js" integrity="sha384-uONtBTCBzHKF84F6XvyC8S0gL8HTkAPeCyBNvfLfsqHh+Kd6s/kaS4BdmNQ5ktp1" crossorigin="anonymous"></script>
+
+</body>
+</html>
